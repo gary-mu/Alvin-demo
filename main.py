@@ -49,3 +49,10 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+footer_html = """<div style='text-align: center;'>
+  <p>All data are synthtic data for demonstration purpose.</p>
+  <p>Evidence-based strategy sourced from Math 7-10 Model from <a href="https://lvp.digitalpromiseglobal.org/content-area/math-7-10">Digital Promise Website</a></p>
+</div>"""
+st.markdown(footer_html, unsafe_allow_html=True)
+
