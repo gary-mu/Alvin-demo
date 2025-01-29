@@ -68,7 +68,7 @@ if st.button("Ask Alvn", type="primary", key = 'ask_alvn', on_click=click_ask_al
         result = response['outputs'][0]['outputs'][0]['results']['message']['text']
         st.session_state.result = result
 
-        pattern = r"(check.in|strategy|monitor)"  # Regex pattern for keywords
+        pattern = r"(check*in|strategy|monitor)"  # Regex pattern for keywords
         if re.search(pattern, st.session_state.result, re.IGNORECASE):  # Case-insensitive search
             st.session_state.show_schedule = True  # Enable "Schedule 1:1" button
                 
