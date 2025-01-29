@@ -1,5 +1,6 @@
 from dotenv import load_dotenv 
 import requests
+import re
 import os 
 import streamlit as st
 
@@ -27,28 +28,74 @@ def run_flow(message: str) -> dict:
     response = requests.post(api_url, json=payload, headers=headers)
     return response.json()
 
+#Helper functions
+def click_ask_alvin_button():
+    st.session_state.ask_alvn_clicked = True
 
-def main():
-    st.title("Alvn - Along + LVN AI Agent Demo")
-    st.subheader("Welcome to Alvn - An AI agent that that uses pedagogically aligned insights to support each learner’s journey.")
-    st.write("Ask your questions to get the best strategies to help your students")
+def click_schedule_button():
+    st.session_state.schedule_clicked = True
+    st.session_state.show_schedule = True 
 
-    message = st.text_area("Enter your questions here", placeholder = 'Ask your question to get the best strategies to help your students') 
 
-    if st.button("Ask Alvn", type="primary"):
-        if not message.strip():
-            st.error("Please enter a question")
-            return
-        try: 
-            with st.spinner("Thinking...feel free to grab a beverage while you wait"):
-                response = run_flow(message)
-            result = response['outputs'][0]['outputs'][0]['results']['message']['text']
-            st.markdown(result)
-        except Exception as e:
-            st.error("An error occurred: " + str(e))
+# Initialize session state variables
+if 'clicked' not in st.session_state:
+    st.session_state.clicked = False
+if 'result' not in st.session_state:
+    st.session_state.result = ''
+if 'show_schedule' not in st.session_state:
+    st.session_state.show_schedule = False
+    
+if 'scheduled' not in st.session_state:
+    st.session_state.schedule_clicked = False  # Track if "Schedule 1:1" was clicked
+    st.session_state.schedule_status = ''
 
-if __name__ == "__main__":
-    main()
+
+#Start of the App
+st.title("Alvn - Along + LVN AI Agent Demo")
+st.subheader("Welcome to Alvn - An AI agent that that uses pedagogically aligned insights to support each learner’s journey.")
+st.write("Ask your questions to get the best strategies to help your students")
+
+message = st.text_area("Enter your questions here", placeholder = 'Ask your question to get the best strategies to help your students') 
+
+if st.button("Ask Alvn", type="primary", key = 'ask_alvn', on_click=click_ask_alvin_button):
+    if not message.strip():
+        st.error("Please enter a question")
+        st.stop()
+    try: 
+        with st.spinner("Thinking...feel free to grab a beverage while you wait"):
+            response = run_flow(message)
+        result = response['outputs'][0]['outputs'][0]['results']['message']['text']
+        #result = 'check in'
+        st.session_state.result = result
+        st.session_state.show_schedule = True
+
+        # pattern = r"(check.in|progress|monitor)"  # Regex pattern for keywords
+        # if re.search(pattern, st.session_state.result, re.IGNORECASE):  # Case-insensitive search
+        #     st.session_state.show_schedule_button = True  # Enable "Schedule 1:1" button
+                
+
+    except Exception as e:
+        st.error("An error occurred: " + str(e))
+
+
+
+# Ensure the result persists after interactions
+st.markdown(st.session_state.result)
+
+# Persist the "Schedule 1:1" button even after clicking it
+if st.session_state.show_schedule:
+    st.markdown("**Recommended action:**")
+    if st.button("Schedule 1:1", type='primary', on_click=click_schedule_button, key = 'schedule'):
+        st.session_state.show_schedule = True  # Mark it as scheduled
+        st.session_state.schedule_status = "You have scheduled a 1:1 session with the student, check your calendar app"
+        st.success(st.session_state.schedule_status)
+
+if st.session_state.schedule_clicked: 
+    st.success(st.session_state.schedule_status)
+
+
+if st.session_state.clicked:
+    st.success(st.session_state.schedule_status)
 
 footer_html = """<div style='text-align: center;'>
   <p>All student response data are synthtic data for demonstration purpose only.</p>
