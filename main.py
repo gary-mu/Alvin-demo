@@ -62,16 +62,15 @@ if st.button("Ask Alvn", type="primary", key = 'ask_alvn', on_click=click_ask_al
         st.error("Please enter a question")
         st.stop()
     try: 
+        st.session_state.show_schedule = False # Reset "Schedule 1:1" button visibility
         with st.spinner("Thinking...feel free to grab a beverage while you wait"):
             response = run_flow(message)
         result = response['outputs'][0]['outputs'][0]['results']['message']['text']
-        #result = 'check in'
         st.session_state.result = result
-        st.session_state.show_schedule = True
 
-        # pattern = r"(check.in|progress|monitor)"  # Regex pattern for keywords
-        # if re.search(pattern, st.session_state.result, re.IGNORECASE):  # Case-insensitive search
-        #     st.session_state.show_schedule_button = True  # Enable "Schedule 1:1" button
+        pattern = r"(check.in|strategy|monitor)"  # Regex pattern for keywords
+        if re.search(pattern, st.session_state.result, re.IGNORECASE):  # Case-insensitive search
+            st.session_state.show_schedule = True  # Enable "Schedule 1:1" button
                 
 
     except Exception as e:
