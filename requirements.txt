@@ -1,3 +1,4 @@
 python-dotenv
 streamlit
+streamlit_extras
 requests
