@@ -3,6 +3,7 @@ import requests
 import re
 import os 
 import streamlit as st
+from streamlit_extras.stylable_container import stylable_container
 
 load_dotenv()
 
@@ -56,25 +57,33 @@ st.subheader("Welcome to Alvn - An AI agent that that uses pedagogically aligned
 st.write("Ask your questions to get the best strategies to help your students")
 
 message = st.text_area("Enter your questions here", placeholder = 'Ask your question to get the best strategies to help your students') 
+with stylable_container(
+    "green",
+    css_styles="""
+    button {
+        background-color: #574EFF;
+        border: 1px solid white;
+        color: white;
+    }""",
+):
+    if st.button("Ask Alvn", type="primary", key = 'ask_alvn', on_click=click_ask_alvin_button):
+        if not message.strip():
+            st.error("Please enter a question")
+            st.stop()
+        try: 
+            st.session_state.show_schedule = False # Reset "Schedule 1:1" button visibility
+            with st.spinner("Thinking...feel free to grab a beverage while you wait"):
+                response = run_flow(message)
+            result = response['outputs'][0]['outputs'][0]['results']['message']['text']
+            st.session_state.result = result
 
-if st.button("Ask Alvn", type="primary", key = 'ask_alvn', on_click=click_ask_alvin_button):
-    if not message.strip():
-        st.error("Please enter a question")
-        st.stop()
-    try: 
-        st.session_state.show_schedule = False # Reset "Schedule 1:1" button visibility
-        with st.spinner("Thinking...feel free to grab a beverage while you wait"):
-            response = run_flow(message)
-        result = response['outputs'][0]['outputs'][0]['results']['message']['text']
-        st.session_state.result = result
+            pattern = r"(check*in|strategy|monitor)"  # Regex pattern for keywords
+            if re.search(pattern, st.session_state.result, re.IGNORECASE):  # Case-insensitive search
+                st.session_state.show_schedule = True  # Enable "Schedule 1:1" button
+                    
 
-        pattern = r"(check*in|strategy|monitor)"  # Regex pattern for keywords
-        if re.search(pattern, st.session_state.result, re.IGNORECASE):  # Case-insensitive search
-            st.session_state.show_schedule = True  # Enable "Schedule 1:1" button
-                
-
-    except Exception as e:
-        st.error("An error occurred: " + str(e))
+        except Exception as e:
+            st.error("An error occurred: " + str(e))
 
 
 
