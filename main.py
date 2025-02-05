@@ -10,9 +10,12 @@ load_dotenv()
 BASE_API_URL = "https://api.langflow.astra.datastax.com"
 LANGFLOW_ID = "6d400d27-daa8-4515-abb1-f651b3fb82dd"
 FLOW_ID = "7d79c49f-06ed-432d-976f-a3180a996e8a" #LVN Prototype v1
+ENDPOINT = "Math_7_10-2" # The endpoint name of the flow
+
+#most likely do not need to update
 APPLICATION_TOKEN = os.environ.get("APP_TOKEN") 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-ENDPOINT = "Math_7_10" # The endpoint name of the flow
+
 
 def run_flow(message: str) -> dict:
     api_url = f"{BASE_API_URL}/lf/{LANGFLOW_ID}/api/v1/run/{ENDPOINT}"
