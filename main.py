@@ -14,7 +14,6 @@ APPLICATION_TOKEN = os.environ.get("APP_TOKEN")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 ENDPOINT = "Math_7_10" # The endpoint name of the flow
 
-
 def run_flow(message: str) -> dict:
     api_url = f"{BASE_API_URL}/lf/{LANGFLOW_ID}/api/v1/run/{ENDPOINT}"
 
