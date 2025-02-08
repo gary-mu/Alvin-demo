@@ -107,9 +107,27 @@ if st.session_state.schedule_clicked:
 if st.session_state.clicked:
     st.success(st.session_state.schedule_status)
 
-footer_html = """<div style='text-align: center;'>
-  <p>All student response data are synthtic data for demonstration purpose only.</p>
+footer_html = """
+<style>
+.footer {
+position: float;
+left: 0;
+bottom: 0;
+width: 100%;
+margin: 0px;
+background-color: #212866;
+padding-top: 1.5 rem;
+color: white;
+text-align: c;
+}
+</style>
+
+<div style='text-align: center;', class="footer">
+  <p>All student response data are synthetic data for demonstration purpose only.</p>
   <p>Evidence-based strategy sourced from Math 7-10 Model from <a href="https://lvp.digitalpromiseglobal.org/content-area/math-7-10">Digital Promise Website</a></p>
-</div>"""
+  <p>Usage under <a href="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons license </a></p>
+  <img src="https://digitalpromise.org/wp-content/uploads/2022/01/DP_logo_2020.svg" alt="Digital Promise Logo" style="width:200px;height:100px;">
+</div>
+"""
 st.markdown(footer_html, unsafe_allow_html=True)
 
