@@ -94,7 +94,8 @@ st.markdown(st.session_state.result)
 
 # Persist the "Schedule 1:1" button even after clicking it
 if st.session_state.show_schedule:
-    st.markdown("**Recommended action:**")
+    st.markdown(f'<p style="background-color:#574EFF;color:white;font-weight: bold;text-decoration: underline;font-size:18px;height:40px;">Recommended actions:</p>', unsafe_allow_html=True)
+    #st.markdown("**Recommended action:**")
     if st.button("Schedule 1:1", type='primary', on_click=click_schedule_button, key = 'schedule'):
         st.session_state.show_schedule = True  # Mark it as scheduled
         st.session_state.schedule_status = "You have scheduled a 1:1 session with the student, check your calendar app"
@@ -113,12 +114,14 @@ footer_html = """
 position: float;
 left: 0;
 bottom: 0;
-width: 100%;
+width: auto;
 margin: 0px;
 background-color: #212866;
 padding-top: 1.5 rem;
+margin: 0 auto 100px auto;
 color: white;
-text-align: c;
+text-align: center;
+overflow:auto;
 }
 </style>
 
