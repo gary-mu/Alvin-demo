@@ -65,6 +65,7 @@ with stylable_container(
     button {
         background-color: #574EFF;
         border: 1px solid white;
+        font-weight: bold;
         color: white;
     }""",
 ):
@@ -90,35 +91,36 @@ with stylable_container(
 
 
 # Ensure the result persists after interactions
-st.markdown(st.session_state.result)
+with st.container(border = True, height=500):
+    st.markdown(st.session_state.result)
 
 # Persist the "Schedule 1:1" button even after clicking it
-if st.session_state.show_schedule:
-    st.markdown(f'<p style="background-color:#574EFF;color:white;font-weight: bold;text-decoration: underline;font-size:18px;height:40px;">Recommended actions:</p>', unsafe_allow_html=True)
-    #st.markdown("**Recommended action:**")
-    if st.button("Schedule 1:1", type='primary', on_click=click_schedule_button, key = 'schedule'):
-        st.session_state.show_schedule = True  # Mark it as scheduled
-        st.session_state.schedule_status = "You have scheduled a 1:1 session with the student, check your calendar app"
+with st.container(border = True):
+    if st.session_state.show_schedule:
+        st.markdown(f'<p style="color:black;font-weight: bold;text-decoration:underline;font-size:20px;height:40px;">Recommended actions:</p>', unsafe_allow_html=True)
+        #st.markdown("**Recommended actions:**")
+        if st.button("Schedule a check-in", type='primary', on_click=click_schedule_button, key = 'schedule'):
+            st.session_state.show_schedule = True  # Mark it as scheduled
+            st.session_state.schedule_status = "You have scheduled a 1:1 session with the student, check your calendar app"
+            st.success(st.session_state.schedule_status)
+
+    if st.session_state.schedule_clicked: 
         st.success(st.session_state.schedule_status)
 
-if st.session_state.schedule_clicked: 
-    st.success(st.session_state.schedule_status)
 
-
-if st.session_state.clicked:
-    st.success(st.session_state.schedule_status)
+    if st.session_state.clicked:
+        st.success(st.session_state.schedule_status)
 
 footer_html = """
 <style>
 .footer {
-position: float;
+position: relative;
 left: 0;
 bottom: 0;
-width: auto;
+width: 100%;
 margin: 0px;
 background-color: #212866;
-padding-top: 1.5 rem;
-margin: 0 auto 100px auto;
+font-size: small;
 color: white;
 text-align: center;
 overflow:auto;
