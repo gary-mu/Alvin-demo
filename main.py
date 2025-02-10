@@ -1,4 +1,5 @@
 from dotenv import load_dotenv 
+import hmac
 import requests
 import re
 import os 
@@ -39,6 +40,27 @@ def click_schedule_button():
     st.session_state.schedule_clicked = True
     st.session_state.show_schedule = True 
 
+#Font title CSS
+def set_dual_font_title():
+    st.markdown("""
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Graphik&family=Playfair+Display&display=swap'); /* Import Graphik and Playfair Display */
+
+        .custom-title {
+            font-size: 40px;
+        }
+        .font-part1 {
+            font-family: 'Graphik', sans-serif; 
+        }
+        .font-part2 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+set_dual_font_title()
+
 
 # Initialize session state variables
 if 'clicked' not in st.session_state:
@@ -52,13 +74,53 @@ if 'scheduled' not in st.session_state:
     st.session_state.schedule_clicked = False  # Track if "Schedule 1:1" was clicked
     st.session_state.schedule_status = ''
 
+#Checking password
+def check_password():
+    """Returns `True` if the user had the correct password."""
+
+    def password_entered():
+        """Checks whether a password entered by the user is correct."""
+        if hmac.compare_digest(st.session_state["password"], st.secrets["password"]):
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]  # Don't store the password.
+        else:
+            st.session_state["password_correct"] = False
+
+    # Return True if the password is validated.
+    if st.session_state.get("password_correct", False):
+        return True
+
+    # Show input for password.
+    st.text_input(
+        "Password", type="password", on_change=password_entered, key="password"
+    )
+    if "password_correct" in st.session_state:
+        st.error("😕 Password incorrect")
+    return False
+
+
+if not check_password():
+    st.stop()  # Do not continue if check_password is not True.
+
 
 #Start of the App
-st.title("Alvn - Along + LVN AI Agent Demo")
+col1, col2 = st.columns([1, 2])
+with col1:
+    st.image("images/alvn_logo.jpeg")
+with col2:
+    st.markdown(
+        '<h1 class="custom-title">'
+        '<span class="font-part1">Ask </span>'  # First part of the title with first font
+        '<span class="font-part2">Alvn : </span>'    # Second part of the title with second font
+        '<br><span>Along + LVN AI Agent Demo</span>'    # Second part of the title with second font
+        '</h1>',
+        unsafe_allow_html=True
+    )
+    #st.markdown("Get the most relevant data from EduGraph’s knowledge graph ensuring you have high quality context data to pass to an LLM for your edtech application.")
+    # st.title("Alvn - Along + LVN AI Agent Demo")
 st.subheader("Welcome to Alvn - An AI agent that that uses pedagogically aligned insights to support each learner’s journey.")
-st.write("Ask your questions to get the best strategies to help your students")
 
-message = st.text_area("Enter your questions here", placeholder = 'Ask your question to get the best strategies to help your students') 
+message = st.text_area("Ask your questions to get the best strategies to help your students:", placeholder = 'Ask your question to get the best strategies to help your students') 
 with stylable_container(
     "green",
     css_styles="""
