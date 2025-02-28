@@ -120,7 +120,8 @@ with col2:
     # st.title("Alvn - Along + LVN AI Agent Demo")
 st.subheader("Welcome to Alvn - An AI agent that that uses pedagogically aligned insights to support each learner’s journey.")
 
-message = st.text_area("Ask your questions to get the best strategies to help your students:", placeholder = 'Ask your question to get the best strategies to help your students') 
+message = st.text_area("Ask your questions to get the best strategies to help your students:", 
+                       placeholder = 'Try: How can I help my student Draco who is struggling with my math class?') 
 with stylable_container(
     "green",
     css_styles="""
